@@ -23,5 +23,12 @@ form{
 button{
     font-size: large;
 }
+body{
+    background-color: lightskyblue;
+}
+
+h3{
+    font-size: 20px;
+}
 
 

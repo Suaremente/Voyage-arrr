@@ -20,8 +20,8 @@ app.add_middleware(
 
 @app.get("/")
 async def get_data():
-    data = {'name': 'John',
-            'age': 30}
+    data = {'name': 'WILLIAM BU TESTING',
+            'age': 20}
     return data
 
 @app.get("/info")
