@@ -59,72 +59,65 @@
 <!--        <button style= "color:black; background-color:white; "  type="submit">submit</button>-->
 <!--        </form>-->
 
-        <input type="text" id="city_text" value="" placeholder="Enter a city!">
-
-        <button onclick="myFunction()">Submit</button>
+        <button onclick="window.location.href = 'page2.html'">Get Started</button>
 
         <p id="demo"></p>
     </main>
-    <h1>TESTING PAGE</h1>
-    <p id="name"></p>
-    <p id="year"></p>
-    <p id="event"></p>
-    <h1>TESTING PAGE</h1>
     </div>
-    <script>
+    // <script>
         // Fetching data from the root endpoint
-        fetch('http://127.0.0.1:8000/')
-            .then(response => response.json())
-            .then(data => {
-                // Displaying name and age
-                document.getElementById('name').innerText = "Name: " + data.name;
-                document.getElementById('year').innerText = "Year: " + data.year;
-                console.log(data);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+    //     fetch('http://127.0.0.1:8000/')
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             // Displaying name and age
+    //             document.getElementById('name').innerText = "Name: " + data.name;
+    //             document.getElementById('year').innerText = "Year: " + data.year;
+    //             console.log(data);
+    //         })
+    //         .catch(error => {
+    //             console.error('Error:', error);
+    //         });
 
-        // Fetching data from the /info endpoint
-        fetch('http://127.0.0.1:8000/info')
-            .then(response => response.json())
-            .then(data => {
-                // Displaying event
-                document.getElementById('event').innerText = "Event: " + data.event;
-                console.log(data)
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+    //     // Fetching data from the /info endpoint
+    //     fetch('http://127.0.0.1:8000/info')
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             // Displaying event
+    //             document.getElementById('event').innerText = "Event: " + data.event;
+    //             console.log(data)
+    //         })
+    //         .catch(error => {
+    //             console.error('Error:', error);
+    //         });
 
-        async function myFunction() {
-          var x = document.getElementById("city_text").value;
-          document.getElementById("demo").innerHTML = 'loading...'
+    //     async function myFunction() {
+    //       var x = document.getElementById("city_text").value;
+    //       document.getElementById("demo").innerHTML = 'loading...'
 
-          const data = {text: x};
+    //       const data = {text: x};
 
-          try {
-              const response = await fetch('http://127.0.0.1:8000/submit_city', {
-                  method: 'POST',
-                  headers: {
-                      'Content-Type' : 'application/json',
-                  },
-                  body: JSON.stringify(data),
-              });
+    //       try {
+    //           const response = await fetch('http://127.0.0.1:8000/submit_city', {
+    //               method: 'POST',
+    //               headers: {
+    //                   'Content-Type' : 'application/json',
+    //               },
+    //               body: JSON.stringify(data),
+    //           });
 
-              if(response.ok){
-                  const jsonResponse = await response.json();
-                  document.getElementById("demo").innerHTML = jsonResponse;
-                  console.log('Success: ', jsonResponse);
+    //           if(response.ok){
+    //               const jsonResponse = await response.json();
+    //               document.getElementById("demo").innerHTML = jsonResponse;
+    //               console.log('Success: ', jsonResponse);
 
-              } else{
-                  console.error('error: ', response.statusText);
-              }
-          } catch(error){
-              console.error('fetch error: ', error);
-          }
-        }
-    </script>
+    //           } else{
+    //               console.error('error: ', response.statusText);
+    //           }
+    //       } catch(error){
+    //           console.error('fetch error: ', error);
+    //       }
+    //     }
+    // </script>
 
 </body>
 </html>
