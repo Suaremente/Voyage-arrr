@@ -28,5 +28,3 @@ async def get_info():
     data = {'event': 'KNIGHT HACKS'}
     return data
 
-# Run the application
-# Use `uvicorn main:app --reload` to run the app, assuming this code is in `main.py`
