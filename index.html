@@ -12,7 +12,7 @@
 
 <style>
     body{
-        background-image: url('https://i.pinimg.com/564x/86/e9/60/86e96065df90f1d485793cd9c64b5dc6.jpg'); /* Add your background image URL */
+        background-image: url('/Users/luisa/Downloads/vecteezy_pirate-parrot-in-hat-on-anchor-on-sea-beach_13416923_755 2/vecteezy_pirate-parrot-in-hat-on-anchor-on-sea-beach_13416923.jpg'); /* Add your background image URL */
             background-size: cover; /* Cover the entire background */
             background-repeat: no-repeat;
             background-position: center;
@@ -52,15 +52,22 @@
     </header>
 
     <main>
-        <form id="travelForm" action="page2.html" method="get">
-            Input the city and state you will be visiting: <input type = "text" id="locationInput" required>
-        <br>
-        <button style= "color:black; background-color:rgb(243, 214, 84); "  type="submit">Submit</button>
-        </form>
+<!--        this just directs you to page2-->
+<!--        <form id="travelForm" action="page2.html" method="get">-->
+<!--            Input the city and state you will be visiting: <input type = "text" id="locationInput" required>-->
+<!--        <br>-->
+<!--        <button style= "color:black; background-color:white; "  type="submit">submit</button>-->
+<!--        </form>-->
+
+        <input type="text" id="city_text" value="" placeholder="Enter a city!">
+
+        <button onclick="myFunction()">Submit</button>
+
+        <p id="demo"></p>
     </main>
     <h1>TESTING PAGE</h1>
     <p id="name"></p>
-    <p id="age"></p>
+    <p id="year"></p>
     <p id="event"></p>
     <h1>TESTING PAGE</h1>
     </div>
@@ -71,7 +78,7 @@
             .then(data => {
                 // Displaying name and age
                 document.getElementById('name').innerText = "Name: " + data.name;
-                document.getElementById('age').innerText = "Age: " + data.age;
+                document.getElementById('year').innerText = "Year: " + data.year;
                 console.log(data);
             })
             .catch(error => {
@@ -89,6 +96,34 @@
             .catch(error => {
                 console.error('Error:', error);
             });
+
+        async function myFunction() {
+          var x = document.getElementById("city_text").value;
+          document.getElementById("demo").innerHTML = 'loading...'
+
+          const data = {text: x};
+
+          try {
+              const response = await fetch('http://127.0.0.1:8000/submit_city', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type' : 'application/json',
+                  },
+                  body: JSON.stringify(data),
+              });
+
+              if(response.ok){
+                  const jsonResponse = await response.json();
+                  document.getElementById("demo").innerHTML = jsonResponse;
+                  console.log('Success: ', jsonResponse);
+
+              } else{
+                  console.error('error: ', response.statusText);
+              }
+          } catch(error){
+              console.error('fetch error: ', error);
+          }
+        }
     </script>
 
 </body>
