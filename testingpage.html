@@ -1,39 +1,186 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>TEST</title>
-</head>
-<body>
-    <p id="name"></p>
-    <p id="age"></p>
-    <h1>TESTING PAGE</h1>
-    <script>
-        // Fetching data from the root endpoint
-        fetch('http://127.0.0.1:8000/')
-            .then(response => response.json())
-            .then(data => {
-                // Displaying name and age
-                document.getElementById('name').innerText = "Name: " + data.name;
-                document.getElementById('age').innerText = "Age: " + data.age;
-                console.log(data);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Custom Search with Mapbox</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
+    <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet" />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
 
-        // Fetching data from the /info endpoint
-        fetch('http://127.0.0.1:8000/info')
-            .then(response => response.json())
-            .then(data => {
-                // You can display the event data or use it as needed
-                const infoSection = document.createElement('p');
-                infoSection.innerText = "Event: " + data.event;
-                document.body.appendChild(infoSection);
-                console.log(data)
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+      #map {
+        position: absolute;
+        top: 0;
+        width: 100%; /* Adjust this value to make the map smaller */
+        height: 70%; /* Keep this value as needed */
+        left: 50%; /* Position the map's left edge at the center of its container */
+        transform: translateX(-50%); /* Shift the map left by 50% of its width to center it */
+      }
+
+
+
+      .search-container {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        z-index: 1;
+        background: white;
+        padding: 10px;
+        border-radius: 4px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        width: 300px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .search-container input {
+        padding: 8px;
+        margin-bottom: 10px;
+      }
+
+      .search-container button {
+        padding: 8px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 4px;
+      }
+
+      /* Style for dropdown suggestions */
+      .suggestions {
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        max-height: 200px;
+        overflow-y: auto;
+      }
+
+      .suggestions div {
+        padding: 8px;
+        cursor: pointer;
+      }
+
+      .suggestions div:hover {
+        background-color: #f0f0f0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="search-container">
+      <input type="text" id="location-input" placeholder="Enter location" />
+      <div class="suggestions" id="suggestions"></div>
+      <button id="search-btn">Search</button>
+    </div>
+    <div id="map"></div>
+
+    <script>
+      // Initialize the Mapbox map
+      mapboxgl.accessToken = 'pk.eyJ1Ijoid2lsbGlhbWJ1IiwiYSI6ImNtMXdpeHYxejBuZHUybG9yYnRzZmJxeDMifQ.CvpftxGSqM7tF0ZbU24v0A';
+      const map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/streets-v12',
+        center: [-80.191788, 25.761681], // Miami default center
+        zoom: 12
+      });
+
+      let currentMarker = null;
+
+      // Function to handle geocoding and map update
+      function searchLocation(location) {
+        const accessToken = 'pk.eyJ1Ijoid2lsbGlhbWJ1IiwiYSI6ImNtMXdpeHYxejBuZHUybG9yYnRzZmJxeDMifQ.CvpftxGSqM7tF0ZbU24v0A';
+        const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(location)}.json?access_token=${accessToken}`;
+
+        fetch(url)
+          .then(response => response.json())
+          .then(data => {
+            if (data.features && data.features.length > 0) {
+              const coordinates = data.features[0].geometry.coordinates;
+              console.log('Coordinates found:', coordinates);
+
+              // Update the map center and add marker
+              map.flyTo({
+                center: coordinates,
+                zoom: 14,
+                essential: true
+              });
+
+              // Remove the existing marker if any
+              if (currentMarker) {
+                currentMarker.remove();
+              }
+
+              // Add a new marker at the selected location
+              currentMarker = new mapboxgl.Marker()
+                .setLngLat(coordinates)
+                .addTo(map);
+            } else {
+              alert('Location not found. Please try a different search.');
+            }
+          })
+          .catch(error => {
+            console.error('Error with geocoding:', error);
+            alert('There was an error processing your search. Please try again.');
+          });
+      }
+
+      // Function to fetch suggestions while typing
+      function fetchSuggestions(query) {
+        const accessToken = 'pk.eyJ1Ijoid2lsbGlhbWJ1IiwiYSI6ImNtMXdpeHYxejBuZHUybG9yYnRzZmJxeDMifQ.CvpftxGSqM7tF0ZbU24v0A';
+        const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(query)}.json?access_token=${accessToken}&autocomplete=true&limit=5`;
+
+        fetch(url)
+          .then(response => response.json())
+          .then(data => {
+            const suggestionsDiv = document.getElementById('suggestions');
+            suggestionsDiv.innerHTML = '';
+
+            if (data.features && data.features.length > 0) {
+              data.features.forEach(feature => {
+                const suggestion = document.createElement('div');
+                suggestion.textContent = feature.place_name;
+                suggestion.addEventListener('click', () => {
+                  // On suggestion click, update map and clear suggestions
+                  searchLocation(feature.place_name);
+                  document.getElementById('location-input').value = feature.place_name;
+                  suggestionsDiv.innerHTML = '';
+                });
+                suggestionsDiv.appendChild(suggestion);
+              });
+            }
+          })
+          .catch(error => {
+            console.error('Error fetching suggestions:', error);
+          });
+      }
+
+      // Attach event listener to search input for fetching suggestions
+      document.getElementById('location-input').addEventListener('input', function () {
+        const query = this.value;
+        if (query.length > 2) { // Start fetching suggestions after 3 characters
+          fetchSuggestions(query);
+        } else {
+          document.getElementById('suggestions').innerHTML = '';
+        }
+      });
+
+      // Attach event listener to the search button
+      document.getElementById('search-btn').addEventListener('click', function () {
+        const location = document.getElementById('location-input').value;
+        searchLocation(location);
+      });
+
+      // Optional: Attach event listener to trigger search on pressing Enter key
+      document.getElementById('location-input').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+          const location = document.getElementById('location-input').value;
+          searchLocation(location);
+        }
+      });
     </script>
-</body>
+  </body>
 </html>
+
