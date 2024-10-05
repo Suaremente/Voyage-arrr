@@ -1,8 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 from openai import OpenAI
 import os
 from dotenv import load_dotenv
+
 
 load_dotenv()
 
@@ -12,7 +14,7 @@ def chatgpt_message(prompt):
     chat_completion = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
-            {"role": "assistant", "content": "You are a travel vacation assistant"},
+            {"role": "assistant", "content": "You are a travel vacation itinerary assistant, if the prompt has nothing to do with travel, please ask the user to resubmit"},
             {
                 "role": "user",
                 "content": prompt
@@ -22,17 +24,17 @@ def chatgpt_message(prompt):
     return chat_completion.choices[0].message.content.strip()
 
 
-example_gpt = chatgpt_message("tell me im doing good and almost done with this project, less than 10 words")
+example_gpt = chatgpt_message("miami")
 print(example_gpt)
 
 
 app = FastAPI()
 
 # Define the allowed origins
-origins = [
-    "http://localhost:63342",
-    "https://voyage-arrr.vercel.app",  # Update this to your frontend URL
-]
+origins = ["*"]
+    # "http://localhost:63342",
+    # "https://voyage-arrr.vercel.app",  # Update this to your frontend URL
+
 
 # Add the CORS middleware
 app.add_middleware(
@@ -43,10 +45,14 @@ app.add_middleware(
     allow_headers=["*"],  # Allow all headers
 )
 
+class TextData(BaseModel):
+    text: str
+
+
 @app.get("/")
 async def get_data():
     data = {'name': example_gpt,
-            'age': 20}
+            'year': 2024}
     return data
 
 @app.get("/info")
@@ -54,3 +60,10 @@ async def get_info():
     data = {'event': 'KNIGHT HACKS'}
     return data
 
+
+@app.post("/submit_city")
+async def submit_city(data: TextData):
+    print(f"received data/city: {data.text}")
+    final_data = chatgpt_message(f"Quick paragraph overview of vacation things to do at {data.text}")
+    print(final_data)
+    return final_data
