@@ -41,6 +41,37 @@
         <button style= "color:white; background-color:black; border:none; border-radius:5px" type="submit">submit</button>
         </form>
     </main>
+    <p id="name"></p>
+    <p id="age"></p>
+    <h1>TESTING PAGE</h1>
+    <script>
+        // Fetching data from the root endpoint
+        fetch('http://127.0.0.1:8000/')
+            .then(response => response.json())
+            .then(data => {
+                // Displaying name and age
+                document.getElementById('name').innerText = "Name: " + data.name;
+                document.getElementById('age').innerText = "Age: " + data.age;
+                console.log(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+
+        // Fetching data from the /info endpoint
+        fetch('http://127.0.0.1:8000/info')
+            .then(response => response.json())
+            .then(data => {
+                // You can display the event data or use it as needed
+                const infoSection = document.createElement('p');
+                infoSection.innerText = "Event: " + data.event;
+                document.body.appendChild(infoSection);
+                console.log(data)
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    </script>
 
 </body>
 </html>
