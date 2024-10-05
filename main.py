@@ -5,7 +5,8 @@ app = FastAPI()
 
 # Define the allowed origins
 origins = [
-    "http://localhost:63342",  # Update this to your frontend URL
+    "http://localhost:63342",
+    "https://voyage-arrr.vercel.app",  # Update this to your frontend URL
 ]
 
 # Add the CORS middleware

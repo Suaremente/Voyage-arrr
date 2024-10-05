@@ -1,9 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link href="test.css" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
     <meta charset="UTF-8">
     <title>VoyageARRR</title>
+
 </head>
+
 <style>
     body{
         background-color: lightskyblue;
@@ -22,7 +28,7 @@
     }
 </style>
 <body>
-    <img src="" alt="Travel Logo">
+    <img src="https://cdn-icons-png.flaticon.com/512/44/44386.png" alt="Travel Logo">
     <header>
         <h1>Voyage-arr</h1>
         <h2>A web app to help users create their perfect travel itinerary</h2>    
@@ -32,9 +38,40 @@
         <form id="travelForm" action="page2.html" method="get">
             Input the city and state you will be visiting: <input type = "text" id="locationInput" required>
         <br>
-        <button style= "color:white; background-color:black; border:none; border-radius:5px" type="submit">submit</button>
+        <button style= "color:black; background-color:white; border-radius:5px; "  type="submit">submit</button>
         </form>
     </main>
+    <p id="name"></p>
+    <p id="age"></p>
+    <h1>TESTING PAGE</h1>
+    <script>
+        // Fetching data from the root endpoint
+        fetch('http://127.0.0.1:8000/')
+            .then(response => response.json())
+            .then(data => {
+                // Displaying name and age
+                document.getElementById('name').innerText = "Name: " + data.name;
+                document.getElementById('age').innerText = "Age: " + data.age;
+                console.log(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+
+        // Fetching data from the /info endpoint
+        fetch('http://127.0.0.1:8000/info')
+            .then(response => response.json())
+            .then(data => {
+                // You can display the event data or use it as needed
+                const infoSection = document.createElement('p');
+                infoSection.innerText = "Event: " + data.event;
+                document.body.appendChild(infoSection);
+                console.log(data)
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    </script>
 
 </body>
 </html>
