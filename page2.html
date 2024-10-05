@@ -12,27 +12,49 @@
         header{
             text-align: center;
         }
-        body{
-            text-align: center;
+        html, body {
+        height: 100%;
+        margin: 0; /* Remove default margin */
         }
+        body{
+            background-image: url('/Users/luisa/Downloads/vecteezy_ocean-wave-vector-background-sea-water-landscape_23865024_747 2/vecteezy_ocean-wave-vector-background-sea-water-landscape_23865024.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+
+            background-color:lightskyblue ;
+            text-align: left;
+        }
+        form {
+            background-color: rgb(34, 122, 209);
+            color: rgb(245, 255, 250);
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgb(255, 215, 0);
+            width: 60vw;
+            max-width: 700px;
+            min-width: 350px;
+            margin: 0 auto;
+            padding: 15px 15px 25px 15px;
+        }
+
     </style>
     <header>
         <h3>Answer a couple more questions so we can help with your ideal vacation</h3>
     </header>
-    <body>
-        
+    <body>   
         <form>
-        <p>How many days is your trip?</p>
-        <input type = "text">
+        <fieldset>
+            <label id="days-label">Enter number of days: <br><input id="days" type="number" /></label>
+            <br><br>
+            <label id="budget-label">Enter your budget: <br><input id="buget" type="text" /></label>
+            <br><br>
+            <label id="nonNegociables-label">Are there any non-negociables: <br><input id="nonNegociables" type="text"/></label>
+            <br><br>
 
-        <p>What is your budget?</p>
-        <input type = "text">
-
-        <p>Are there any non-negociables?</p>
-        <input type = "text">
-
+        </fieldset>
         <br><br>
-        <button style= "color:black; background-color:white; border-radius:5px" type="submit">submit</button>
+
+        <button style="color:black; background-color:white; border-radius:5px; display: block; margin: 0 auto;" type="submit">Submit</button>
 
         </form>
 
