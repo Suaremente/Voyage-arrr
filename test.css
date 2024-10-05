@@ -20,11 +20,11 @@ input{
     border-width: 0.5px;
     border-radius: 10px;
     font-size: large;
-    height: 40px;
+    height: 20px;
 }
 
 form{
-    font-size: 25px;
+    font-size: 20px;
     margin-bottom: 2px;
     font-family: "Roboto",sans-serif;
     

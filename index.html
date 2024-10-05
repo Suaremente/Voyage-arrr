@@ -58,8 +58,10 @@
         <button style= "color:black; background-color:white; "  type="submit">submit</button>
         </form>
     </main>
+    <h1>TESTING PAGE</h1>
     <p id="name"></p>
     <p id="age"></p>
+    <p id="event"></p>
     <h1>TESTING PAGE</h1>
     </div>
     <script>
@@ -80,10 +82,8 @@
         fetch('http://127.0.0.1:8000/info')
             .then(response => response.json())
             .then(data => {
-                // You can display the event data or use it as needed
-                const infoSection = document.createElement('p');
-                infoSection.innerText = "Event: " + data.event;
-                document.body.appendChild(infoSection);
+                // Displaying event
+                document.getElementById('event').innerText = "Event: " + data.event;
                 console.log(data)
             })
             .catch(error => {
