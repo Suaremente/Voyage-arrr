@@ -1,5 +1,30 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from openai import OpenAI
+import os
+from dotenv import load_dotenv
+
+load_dotenv('api_keys.env')
+
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+client = OpenAI(api_key=OPENAI_API_KEY)
+def chatgpt_message(prompt):
+    chat_completion = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {"role": "assistant", "content": "You are a travel vacation assistant"},
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ]
+    )
+    return chat_completion.choices[0].message.content.strip()
+
+
+example_gpt = chatgpt_message("tell me im doing good and almost done with this project, less than 10 words")
+print(example_gpt)
+
 
 app = FastAPI()
 
@@ -20,7 +45,7 @@ app.add_middleware(
 
 @app.get("/")
 async def get_data():
-    data = {'name': 'WILLIAM BU TESTING',
+    data = {'name': example_gpt,
             'age': 20}
     return data
 

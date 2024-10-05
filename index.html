@@ -12,22 +12,39 @@
 
 <style>
     body{
-        background-color: lightskyblue;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        margin: 0;
-        flex-direction: column;
+        background-image: url('/Users/luisa/Downloads/vecteezy_pirate-parrot-in-hat-on-anchor-on-sea-beach_13416923_755 2/vecteezy_pirate-parrot-in-hat-on-anchor-on-sea-beach_13416923.jpg'); /* Add your background image URL */
+            background-size: cover; /* Cover the entire background */
+            background-repeat: no-repeat;
+            background-position: center;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
     }
+    .container {
+            background-color: rgba(34, 122, 209, 0.9); /* Slightly transparent background */
+            color: white;
+            border-radius: 10px; /* Slightly larger border radius */
+            box-shadow: 0 0 15px rgb(255, 215, 0);
+            width: 60vw;
+            max-width: 700px;
+            min-width: 350px;
+            padding: 20px;
+            text-align: center; /* Center text in the container */
+    }
+
     header{
-        text-align: center;
+        margin-bottom: 20px; /* Space below the header */
     }
     main{
         text-align: center;
     }
 </style>
 <body>
+    <div class="container">
+
     <img src="https://cdn-icons-png.flaticon.com/512/44/44386.png" alt="Travel Logo">
     <header>
         <h1>Voyage-arr</h1>
@@ -41,9 +58,11 @@
         <button style= "color:black; background-color:white; "  type="submit">submit</button>
         </form>
     </main>
+    <h1>TESTING PAGE</h1>
     <p id="name"></p>
     <p id="age"></p>
     <h1>TESTING PAGE</h1>
+    </div>
     <script>
         // Fetching data from the root endpoint
         fetch('http://127.0.0.1:8000/')
