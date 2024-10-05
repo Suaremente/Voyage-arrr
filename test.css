@@ -22,9 +22,18 @@ h1{
     
 }
 
-form{
+input{
+    border-width: 0.5px;
+    border-radius: 10px;
     font-size: large;
+    height: 40px;
+}
+
+form{
+    font-size: 25px;
     margin-bottom: 2px;
+    font-family: "Roboto",sans-serif;
+    
 }
 
 button{
@@ -32,6 +41,7 @@ button{
     border: solid black;
     margin-top: 1.5em;
     border-width: 2px;
+    border-radius: 10px;
 
 }
 body{
@@ -39,7 +49,10 @@ body{
 }
 
 h3{
-    font-size: 20px;
+    font-size: 30px;
+    margin-bottom: 4.78em;
+    font-family: "roboto",sans-serif;
+    font-weight: 750;
 }
 
 
