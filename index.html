@@ -29,11 +29,12 @@
     </header>
 
     <main>
-        <form>
-            Input the city and state you will be visiting: <input type = "text">
-        </form>
+        <form id="travelForm" action="page2.html" method="get">
+            Input the city and state you will be visiting: <input type = "text" id="locationInput" required>
         <br>
-        <button style= "color:white; background-color:black; border:none; border-radius:5px" onclick = "alert('Thank you')">submit</button>
+        <button style= "color:white; background-color:black; border:none; border-radius:5px" type="submit">submit</button>
+        </form>
     </main>
+
 </body>
 </html>
