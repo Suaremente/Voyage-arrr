@@ -1,15 +1,16 @@
 html{
     font-size: 20px;
     font-family: "Playfair",serif;
+    
 }
 img{
-    max-width: 100%;
+    max-width: 45%;
     height: auto;
     align-items: center;
     
 }
 h1{
-    font-size: 100px;
+    font-size: 80px;
     font-style:oblique;
     font-family: "Playfair",serif;
     border-bottom: solid
@@ -54,3 +55,9 @@ h3{
 }
 
 
+.container{
+    height: fit-content;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
