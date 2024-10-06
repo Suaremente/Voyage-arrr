@@ -55,7 +55,11 @@ app = FastAPI()
 #     data = {'name': example_gpt,
 #             'year': 2024}
 #     return data
+<<<<<<< HEAD
 
+=======
+#
+>>>>>>> eed01aa8559b8e3afc37d1291ddf5753b2decf44
 # @app.get("/info")
 # async def get_info():
 #     data = {'event': 'KNIGHT HACKS'}
@@ -70,6 +74,7 @@ app = FastAPI()
 #     return final_data
 
 
+<<<<<<< HEAD
 
 
 
@@ -134,3 +139,27 @@ async def gen_itinerary(questionnaire: Questionnaire):
         "itinerary": itinerary
     }
 
+=======
+# Define the structure of the expected data, including the start and end dates
+class TravelFormData(BaseModel):
+    city: str
+    startDate: str
+    endDate: str
+    budget: str
+    nonNegotiables: str
+    travelStyle: str
+    pace: str
+
+# Create a POST endpoint to handle form submissions
+@app.post("/submit")
+async def submit_form(data: TravelFormData):
+    # Process the data here, including the date range
+    print(f"Received data: {data}")
+
+    # You can validate the date range here, for example, ensuring startDate < endDate
+    if data.startDate > data.endDate:
+        return {"error": "Start date cannot be later than the end date."}
+
+    # Respond to the frontend
+    return {"message": "Form submitted successfully!", "received_data": data}
+>>>>>>> eed01aa8559b8e3afc37d1291ddf5753b2decf44
