@@ -90,7 +90,7 @@ async def submit_form(data: TravelFormData):
         f"Create a detailed travel itinerary for a trip to {data.city} "
         f"from {data.startDate} to {data.endDate} with a budget of ${data.budget}. "
         f"Include must-visit places related to {data.nonNegotiables}, and keep a {data.pace} pace."
-        f"The theme or style of itinerary should be {data.travelStyle}."
+        f"The theme or style of itinerary should be {data.travelStyle}. Avoid using markdown symbols like `**` or `#`"
     )
     
     itinerary = chatgpt_message(prompt)
