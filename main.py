@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, Field, validator
-from datetime import datetime, date
+from pydantic import BaseModel
 from openai import OpenAI
 import os
 from dotenv import load_dotenv
@@ -55,7 +54,7 @@ class TextData(BaseModel):
 #     data = {'name': example_gpt,
 #             'year': 2024}
 #     return data
-
+#
 # @app.get("/info")
 # async def get_info():
 #     data = {'event': 'KNIGHT HACKS'}
@@ -70,67 +69,25 @@ class TextData(BaseModel):
 #     return final_data
 
 
+# Define the structure of the expected data, including the start and end dates
+class TravelFormData(BaseModel):
+    city: str
+    startDate: str
+    endDate: str
+    budget: str
+    nonNegotiables: str
+    travelStyle: str
+    pace: str
 
+# Create a POST endpoint to handle form submissions
+@app.post("/submit")
+async def submit_form(data: TravelFormData):
+    # Process the data here, including the date range
+    print(f"Received data: {data}")
 
+    # You can validate the date range here, for example, ensuring startDate < endDate
+    if data.startDate > data.endDate:
+        return {"error": "Start date cannot be later than the end date."}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-class Questionnaire(BaseModel):
-    destination: str = Field(..., min_length=1, description="The destination must not be empty")
-    start_date: date = Field(..., description="Start date must be a valid date in YYYY/MM/DD format")
-    end_date: date = Field(..., description="End date must be a valid date in YYYY/MM/DD format")
-    budget: float = Field(..., gt=0, description="Budget must be a valid dollar amount greater than 0")
-    must_do: str = None
-
-    @validator('start_date', 'end_date')
-    def validate_date_format(cls, value):
-        try:
-            datetime.strptime(value, "%Y/%m/%d")
-        except ValueError:
-            raise ValueError("Date must be in YYYY/MM/DD format")
-        return value
-
-
-@app.get("/itinerary")
-async def gen_itinerary(questionnaire: Questionnaire):
-    start_date = datetime.strptime(questionnaire.start_date, "%Y/%m/%d").date()
-    end_date = datetime.strptime(questionnaire.end_date, "%Y/%m/%d").date()
-
-    if end_date < start_date:
-        print("end date must be after start date")
-
-    prompt = f"I need a detailed travel itinerary for {questionnaire.destination}."
-    prompt += f" The trip starts on {start_date} and ends on {end_date}."
-    prompt += f" The budget for the trip is {questionnaire.budget}."
-    
-    if questionnaire.must_do:
-        prompt += f" The traveler says their itinerary must include {questionnaire.must_do}."
-
-    prompt += f" Please return a list of activities as JSON objects with each element containing the name of the activity, the price of the activity, as well as any applicable links for learning more about the event and/or registering for the event"
-
-    itinerary = f"Sample itinerary for {questionnaire.destination} from {start_date} to {end_date}"
-    
-    return {
-        "status": "success",
-        "itinerary": itinerary
-    }
-
+    # Respond to the frontend
+    return {"message": "Form submitted successfully!", "received_data": data}
