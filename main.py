@@ -94,6 +94,7 @@ async def submit_form(data: TravelFormData):
         f"Include must-visit places related to {data.nonNegotiables}. This does not mean base the entire itinerary around this, but you must include these activities at least once."
         "The pace of the itinerary must be {data.pace} paced."
         f"The theme or style of itinerary should be {data.travelStyle}."
+        f"Please also consider this itinerary is for a group of {data.numTravelers} travelers."
     )
     
     itinerary = chatgpt_message(prompt)
@@ -112,17 +113,6 @@ async def submit_form(data: TravelFormData):
 
 
     print(itinerary)
-    # Remove markdown symbols from the itinerary
-    def remove_markdown_symbols(text):
-        # Remove '#' symbols
-        text = re.sub(r'#', '', text)
-        # Remove '*' symbols
-        text = re.sub(r'\*', '', text)
-        # Remove '**' symbols
-        text = re.sub(r'\*\*', '', text)
-        return text
-
-    # Remove markdown symbols from the itinerary
-    itinerary = remove_markdown_symbols(itinerary)
+    
     # Return the itinerary to the frontend
     return {"itinerary": itinerary}
