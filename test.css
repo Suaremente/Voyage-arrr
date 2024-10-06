@@ -24,12 +24,13 @@ input{
     height: 25px;
 }
 
-form{
+/*just commented so that all the titles are in the same font*/
+/*form{
     font-size: 20px;
     margin-bottom: 2px;
     font-family: "Roboto",sans-serif;
     
-}
+}*/
 
 button{
     font-family: "Roboto",sans-serif;
@@ -52,13 +53,13 @@ body{
     background-color: lightskyblue;
 }
 
-h3{
+/*h3{
     font-size: 30px;
     font-family: "roboto",sans-serif;
     font-weight: 750;
     border-bottom: solid;
 }
-
+*/
 
 .container{
     height: fit-content;
