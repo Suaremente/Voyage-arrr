@@ -1,28 +1,26 @@
 <!DOCTYPE html>
 <html>
-    <head>
+<head>
     <link href="test.css" rel="stylesheet" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
     <meta charset="UTF-8">
-    </head>
     <style>
-        header{
+        header {
             text-align: center;
         }
         html, body {
-        height: 100%;
-        margin: 0; /* Remove default margin */
+            height: 100%;
+            margin: 0; /* Remove default margin */
         }
-        body{
+        body {
             background-image: url('https://voyage-arrr.vercel.app/backgrounds/vecteezy_ocean-wave-vector-background-sea-water-landscape_23865024.jpg');
             background-repeat: no-repeat;
             background-size: cover;
             background-position: center;
-
-            background-color:lightskyblue ;
+            background-color: lightskyblue;
             text-align: left;
         }
         form {
@@ -36,28 +34,38 @@
             margin: 0 auto;
             padding: 15px 15px 25px 15px;
         }
-
     </style>
+</head>
+<body>
     <header>
         <h3>Answer a couple more questions so we can help with your ideal vacation</h3>
     </header>
-    <body>   
-        <form id="travelForm"> <!-- Added id="travelForm" -->
+    <form id="travelForm">
         <fieldset>
-            <label id="city">Enter the city you will be visiting: <br><input type="text" id="cityInput" name="city"/></label>
+            <label id="city">Enter the city you will be visiting: <br>
+                <input type="text" id="cityInput" name="city" required />
+            </label>
             <br><br>
-            <label id="days">Select start date: <br><input id="startDateInput" type="date" name="startDate" /></label>
+            <label id="days">Select start date: <br>
+                <input id="startDateInput" type="date" name="startDate" required />
+            </label>
             <br><br>
-            <label id="endDate">Select end date: <br><input id="endDateInput" type="date" name="endDate" /></label>
+            <label id="endDate">Select end date: <br>
+                <input id="endDateInput" type="date" name="endDate" required />
+            </label>
             <br><br>
-            <label id="budget">Enter your budget: <br><input id="budgetInput" type="text" name="budget" /></label>
+            <label id="budget">Enter your budget: <br>
+                <input id="budgetInput" type="number" name="budget" required min="0" />
+            </label>
             <br><br>
-            <label id="nonNegotiables">Are there any non-negotiables(must do activites/conditions): <br><input id="nonNegotiablesInput" type="text" name="nonNegotiables"/></label>
+            <label id="nonNegotiables">Are there any non-negotiables (must-do activities/conditions): <br>
+                <input id="nonNegotiablesInput" type="text" name="nonNegotiables" />
+            </label>
             <br><br>
             <label id="travelStyle">How would you describe your travel style:<br>
-                <select id="travelStyleInput" name="travelStyle">
-                    <option value="select">Select an option</option>
-                    <option value="adventurous">Nature/Scenary</option>
+                <select id="travelStyleInput" name="travelStyle" required>
+                    <option value="">Select an option</option>
+                    <option value="adventurous">Nature/Scenery</option>
                     <option value="relaxed">Historical Landmarks</option>
                     <option value="cultural">Cultural</option>
                     <option value="partyNightlife">Party/Night Life</option>
@@ -66,8 +74,8 @@
             </label>
             <br><br>
             <label id="Pace">Do you prefer a fast/busy or relaxed/free paced itinerary:<br>
-                <select id="PaceInput" name="pace">
-                    <option value="select">Select an option</option>
+                <select id="PaceInput" name="pace" required>
+                    <option value="">Select an option</option>
                     <option value="fastBusy">Fast/Busy</option>
                     <option value="relaxedFree">Relaxed/Free</option>
                 </select>
@@ -75,49 +83,54 @@
             <br><br>
         </fieldset>
         <br><br>
+        <button style="color:black; background-color:rgb(243, 214, 84); display: block; margin: 0 auto;" type="submit">Submit</button>
+    </form>
 
-            <button style="color:black; background-color:rgb(243, 214, 84); display: block; margin: 0 auto;" type="submit">Submit</button>
-        </form>
+    <script>
+        // Handle form submission
+        document.getElementById('travelForm').addEventListener('submit', async function(event) {
+            event.preventDefault();  // Prevent the form from reloading the page
 
-        <script>
-    // Handle form submission
-            document.getElementById('travelForm').addEventListener('submit', async function(event) {
-                event.preventDefault();  // Prevent the form from reloading the page
+            // Gather the form data
+            const formData = {
+                city: document.getElementById('cityInput').value,
+                startDate: document.getElementById('startDateInput').value,
+                endDate: document.getElementById('endDateInput').value,
+                budget: document.getElementById('budgetInput').value,
+                nonNegotiables: document.getElementById('nonNegotiablesInput').value,
+                travelStyle: document.getElementById('travelStyleInput').value,
+                pace: document.getElementById('PaceInput').value
+            };
 
-                // Gather the form data including the date range
-                const formData = {
-                    city: document.getElementById('cityInput').value,
-                    startDate: document.getElementById('startDateInput').value,
-                    endDate: document.getElementById('endDateInput').value,
-                    budget: document.getElementById('budgetInput').value,
-                    nonNegotiables: document.getElementById('nonNegotiablesInput').value,
-                    travelStyle: document.getElementById('travelStyleInput').value,
-                    pace: document.getElementById('PaceInput').value
-                };
+            // Custom validation for date range
+            const startDate = new Date(formData.startDate);
+            const endDate = new Date(formData.endDate);
+            if (endDate < startDate) {
+                alert("End date must be after the start date.");
+                return;  // Stop the submission
+            }
 
-                // Send the data as a JSON object to the API endpoint
-                try {
-                    const response = await fetch('http://127.0.0.1:8000/submit', {
-                        method: 'POST',  // or 'PUT', depending on your API design
-                        headers: {
-                            'Content-Type': 'application/json'  // Set the content type to JSON
-                        },
-                        body: JSON.stringify(formData)  // Convert formData to JSON
-                    });
+            // Send the data as a JSON object to the API endpoint
+            try {
+                const response = await fetch('http://127.0.0.1:8000/submit', {
+                    method: 'POST',  // or 'PUT', depending on your API design
+                    headers: {
+                        'Content-Type': 'application/json'  // Set the content type to JSON
+                    },
+                    body: JSON.stringify(formData)  // Convert formData to JSON
+                });
 
-                    if (response.ok) {
-                        const responseData = await response.json(); // If your API returns JSON
-                        console.log('Success:', responseData);
-                        window.location.href = "page3.html";
-                    } else {
-                        console.error('Error:', response.statusText);
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
+                if (response.ok) {
+                    const responseData = await response.json(); // If your API returns JSON
+                    console.log('Success:', responseData);
+                    window.location.href = "page3.html";
+                } else {
+                    console.error('Error:', response.statusText);
                 }
-            });
-        </script>
-
-
-    </body>
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+    </script>
+</body>
 </html>
