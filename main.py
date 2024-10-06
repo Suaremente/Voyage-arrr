@@ -96,19 +96,9 @@ class TravelFormData(BaseModel):
 async def submit_form(data: TravelFormData):
     # Process the data here, including the date range
     print(f"Received data: {data}")
-
-    # You can validate the date range here, for example, ensuring startDate < endDate
-    if data.startDate > data.endDate:
-        return {"error": "Start date cannot be later than the end date."}
-
     # Respond to the frontend
     return {"message": "Form submitted successfully!", "received_data": data}
-# @app.post("/submit_city")
-# async def submit_city(data: TextData):
-#     print(f"received data/city: {data.text}")
-#     final_data = chatgpt_message(f"Quick paragraph overview of vacation things to do at {data.text}")
-#     print(final_data)
-#     return final_data
+
 
 
 @app.get("/itinerary")
