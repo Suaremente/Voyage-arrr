@@ -36,11 +36,17 @@ button{
     font-weight: 700;
     font-size: 25px;
     border: solid black;
-    margin-top: 1.5em;
+    margin-top: 0.5em;
     border-width: 1.75px;
     border-radius: 20px;
     width: 25%;
+    background-color: rgb(243, 214, 84);
+}
 
+button:hover{
+    
+    background:solid;
+    background-color: rgb(175, 101, 55);
 }
 body{
     background-color: lightskyblue;
@@ -48,7 +54,6 @@ body{
 
 h3{
     font-size: 30px;
-    margin-bottom: 2em;
     font-family: "roboto",sans-serif;
     font-weight: 750;
     border-bottom: solid;
