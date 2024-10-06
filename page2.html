@@ -10,6 +10,30 @@
     <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet">
     <meta charset="UTF-8">
     <style>
+        /* Style for the loader */
+        #loader {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            display: none;
+        }
+
+        .spinner {
+            border: 16px solid #f3f3f3;
+            border-top: 16px solid #3498db;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         header {
             text-align: center;
         }
@@ -192,8 +216,13 @@
                 alert("End date must be after the start date.");
                 return;
             }
+            
+            <div id="loader" style="display: none;">
+                <div class="spinner"></div>  <!-- You can style this spinner as desired -->
+            </div>
 
             try {
+                document.getElementById('loader').style.display = 'block';
                 const response = await fetch('http://127.0.0.1:8000/submit', {
                     method: 'POST',
                     headers: {
@@ -217,6 +246,9 @@
                 }
             } catch (error) {
                 console.error('Error:', error);
+            }
+            finally {
+                document.getElementById('loader').style.display = 'none';
             }
         });
 
