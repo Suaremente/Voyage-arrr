@@ -215,26 +215,21 @@
         pace: document.getElementById('PaceInput').value
     };
 
-            const startDate = new Date(formData.startDate);
-            const endDate = new Date(formData.endDate);
-            if (endDate < startDate) {
-                alert("End date must be after the start date.");
-                return;
-            }
-            
-            <div id="loader" style="display: none;">
-                <div class="spinner"></div>  <!-- You can style this spinner as desired -->
-            </div>
+    const startDate = new Date(formData.startDate);
+    const endDate = new Date(formData.endDate);
+    if (endDate < startDate) {
+        alert("End date must be after the start date.");
+        return;
+    }
 
-            try {
-                document.getElementById('loader').style.display = 'block';
-                const response = await fetch('http://127.0.0.1:8000/submit', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(formData)
-                });
+    try {
+        const response = await fetch('http://127.0.0.1:8000/submit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        });
 
         if (response.ok) {
             const responseData = await response.json();
@@ -248,19 +243,15 @@
             document.getElementById('map-section').style.display = 'block';
             map.resize(); // Ensure the map renders correctly
 
-                    // Search for the selected city
-                    searchLocation(formData.city);
-                } else {
-                    console.error('Error:', response.statusText);
-                }
-            } catch (error) {
-                console.error('Error:', error);
-            }
-            finally {
-                document.getElementById('loader').style.display = 'none';
-            }
-        });
-
+            // Search for the selected city
+            searchLocation(formData.city);
+        } else {
+            console.error('Error:', response.statusText);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+    });
         let currentMarker = null;
 
       function searchLocation(location) {
