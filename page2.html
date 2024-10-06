@@ -126,7 +126,7 @@
     <div id="loader">
         <div class="spinner"></div>
     </div>
-    
+
     <header>
         <h2>Answer a couple more questions so we can help with your ideal vacation</h2>
     </header>
@@ -151,6 +151,10 @@
             <br><br>
             <label id="nonNegotiables">Are there any non-negotiables (must-do activities/conditions): <br>
                 <input id="nonNegotiablesInput" type="text" name="nonNegotiables" />
+            </label>
+            <br><br>
+            <label id="numTravelers"># of travelers: <br>
+                <input id="numTravelersInput" type="text" name="numTravelers" />
             </label>
             <br><br>
             <label id="travelStyle">How would you describe your travel style:<br>
@@ -216,6 +220,7 @@
         endDate: document.getElementById('endDateInput').value,
         budget: document.getElementById('budgetInput').value,
         nonNegotiables: document.getElementById('nonNegotiablesInput').value,
+        numTravelers: document.getElementById('numTravelersInput').value,
         travelStyle: document.getElementById('travelStyleInput').value,
         pace: document.getElementById('PaceInput').value
     };

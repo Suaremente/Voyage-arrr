@@ -79,6 +79,7 @@ class TravelFormData(BaseModel):
     nonNegotiables: str
     travelStyle: str
     pace: str
+    numTravelers: str
 
 # Create a POST endpoint to handle form submissions
 @app.post("/submit")
@@ -95,6 +96,20 @@ async def submit_form(data: TravelFormData):
     )
     
     itinerary = chatgpt_message(prompt)
+
+    def remove_markdown_symbols(text):
+        # Remove '#' symbols
+        text = re.sub(r'#', '', text)
+        # Remove '*' symbols
+        text = re.sub(r'\*', '', text)
+        # Remove '**' symbols
+        text = re.sub(r'\*\*', '', text)
+        return text
+
+    # Remove markdown symbols from the itinerary
+    itinerary = remove_markdown_symbols(itinerary)
+
+
     print(itinerary)
     # Remove markdown symbols from the itinerary
     def remove_markdown_symbols(text):
@@ -110,3 +125,4 @@ async def submit_form(data: TravelFormData):
     itinerary = remove_markdown_symbols(itinerary)
     # Return the itinerary to the frontend
     return {"itinerary": itinerary}
+
