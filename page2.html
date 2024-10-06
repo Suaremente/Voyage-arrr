@@ -6,6 +6,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
+    <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet">
     <meta charset="UTF-8">
     <style>
         header {
@@ -13,7 +15,7 @@
         }
         html, body {
             height: 100%;
-            margin: 0; /* Remove default margin */
+            margin: 0;
         }
         body {
             background-image: url('https://voyage-arrr.vercel.app/backgrounds/vecteezy_ocean-wave-vector-background-sea-water-landscape_23865024.jpg');
@@ -34,6 +36,65 @@
             margin: 0 auto;
             padding: 15px 15px 25px 15px;
         }
+        #map-section {
+            display: none;
+            width: 80%;
+            max-width: 1000px;
+            margin: 20px auto;
+            text-align: center;
+        }
+        #info-box {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        #map {
+            width: 100%;
+            height: 60vh;
+            border-radius: 10px;
+            position: relative;
+        }
+        .search-container {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: white;
+            padding: 10px;
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 300px;
+            display: flex;
+            flex-direction: column;
+            z-index: 1;
+        }
+        .search-container input {
+            padding: 4px;
+            margin-bottom: 10px;
+        }
+        .search-container button {
+            padding: 8px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            width: 120px;
+        }
+        .suggestions {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .suggestions div {
+            padding: 8px;
+            cursor: pointer;
+        }
+        .suggestions div:hover {
+            background-color: #f0f0f0;
+        }
     </style>
 </head>
 <body>
@@ -41,7 +102,8 @@
         <h2>Answer a couple more questions so we can help with your ideal vacation</h2>
     </header>
     <form id="travelForm">
-        <fieldset>
+
+<fieldset>
             <label id="city">Enter the city you will be visiting: <br>
                 <input type="text" id="cityInput" name="city" required />
             </label>
@@ -86,12 +148,34 @@
         <button style="color:black; display: block; margin: 0 auto;" type="submit">Submit</button>
     </form>
 
-    <script>
-        // Handle form submission
-        document.getElementById('travelForm').addEventListener('submit', async function(event) {
-            event.preventDefault();  // Prevent the form from reloading the page
+    <div id="map-section">
+        <div id="info-box">
+            <h3>Explore Your Destination</h3>
+            <p>Use the map below to explore your destination and discover nearby attractions, restaurants, and points of interest. You can search for specific locations using the search bar in the top-left corner of the map.</p>
+        </div>
+        <div id="map">
+            <div class="search-container">
+                <input type="text" id="location-input" placeholder="Enter location" />
+                <div class="suggestions" id="suggestions"></div>
+                <button id="search-btn">Search</button>
+            </div>
+        </div>
+    </div>
 
-            // Gather the form data
+    <script>
+        // Your existing mapbox initialization code remains the same
+        mapboxgl.accessToken = 'pk.eyJ1Ijoid2lsbGlhbWJ1IiwiYSI6ImNtMXdpeHYxejBuZHUybG9yYnRzZmJxeDMifQ.CvpftxGSqM7tF0ZbU24v0A';
+        const map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/streets-v12',
+            center: [-80.191788, 25.761681],
+            zoom: 12
+        });
+
+        // Modified form submission handler
+        document.getElementById('travelForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
             const formData = {
                 city: document.getElementById('cityInput').value,
                 startDate: document.getElementById('startDateInput').value,
@@ -102,28 +186,32 @@
                 pace: document.getElementById('PaceInput').value
             };
 
-            // Custom validation for date range
             const startDate = new Date(formData.startDate);
             const endDate = new Date(formData.endDate);
             if (endDate < startDate) {
                 alert("End date must be after the start date.");
-                return;  // Stop the submission
+                return;
             }
 
-            // Send the data as a JSON object to the API endpoint
             try {
                 const response = await fetch('http://127.0.0.1:8000/submit', {
-                    method: 'POST',  // or 'PUT', depending on your API design
+                    method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'  // Set the content type to JSON
+                        'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(formData)  // Convert formData to JSON
+                    body: JSON.stringify(formData)
                 });
 
                 if (response.ok) {
-                    const responseData = await response.json(); // If your API returns JSON
+                    const responseData = await response.json();
                     console.log('Success:', responseData);
-                    window.location.href = "page3.html";
+
+                    // Show the map section and trigger a resize event
+                    document.getElementById('map-section').style.display = 'block';
+                    map.resize(); // Ensure the map renders correctly
+
+                    // Search for the selected city
+                    searchLocation(formData.city);
                 } else {
                     console.error('Error:', response.statusText);
                 }
@@ -131,6 +219,86 @@
                 console.error('Error:', error);
             }
         });
+
+        let currentMarker = null;
+
+      function searchLocation(location) {
+        const accessToken = 'pk.eyJ1Ijoid2lsbGlhbWJ1IiwiYSI6ImNtMXdpeHYxejBuZHUybG9yYnRzZmJxeDMifQ.CvpftxGSqM7tF0ZbU24v0A';
+        const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(location)}.json?access_token=${accessToken}`;
+
+        fetch(url)
+          .then(response => response.json())
+          .then(data => {
+            if (data.features && data.features.length > 0) {
+              const coordinates = data.features[0].geometry.coordinates;
+              map.flyTo({
+                center: coordinates,
+                zoom: 14,
+                essential: true
+              });
+              if (currentMarker) {
+                currentMarker.remove();
+              }
+              currentMarker = new mapboxgl.Marker()
+                .setLngLat(coordinates)
+                .addTo(map);
+            } else {
+              alert('Location not found. Please try a different search.');
+            }
+          })
+          .catch(error => {
+            console.error('Error with geocoding:', error);
+            alert('There was an error processing your search. Please try again.');
+          });
+      }
+
+      function fetchSuggestions(query) {
+        const accessToken = 'pk.eyJ1Ijoid2lsbGlhbWJ1IiwiYSI6ImNtMXdpeHYxejBuZHUybG9yYnRzZmJxeDMifQ.CvpftxGSqM7tF0ZbU24v0A';
+        const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(query)}.json?access_token=${accessToken}&autocomplete=true&limit=5`;
+
+        fetch(url)
+          .then(response => response.json())
+          .then(data => {
+            const suggestionsDiv = document.getElementById('suggestions');
+            suggestionsDiv.innerHTML = '';
+            if (data.features && data.features.length > 0) {
+              data.features.forEach(feature => {
+                const suggestion = document.createElement('div');
+                suggestion.textContent = feature.place_name;
+                suggestion.addEventListener('click', () => {
+                  searchLocation(feature.place_name);
+                  document.getElementById('location-input').value = feature.place_name;
+                  suggestionsDiv.innerHTML = '';
+                });
+                suggestionsDiv.appendChild(suggestion);
+              });
+            }
+          })
+          .catch(error => {
+            console.error('Error fetching suggestions:', error);
+          });
+      }
+
+      document.getElementById('location-input').addEventListener('input', function () {
+        const query = this.value;
+        if (query.length > 2) {
+          fetchSuggestions(query);
+        } else {
+          document.getElementById('suggestions').innerHTML = '';
+        }
+      });
+
+      document.getElementById('search-btn').addEventListener('click', function () {
+        const location = document.getElementById('location-input').value;
+        searchLocation(location);
+      });
+
+      document.getElementById('location-input').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+          const location = document.getElementById('location-input').value;
+          searchLocation(location);
+        }
+      });
     </script>
 </body>
 </html>
