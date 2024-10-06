@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from openai import OpenAI
 import os
 from dotenv import load_dotenv
+import re
 
 
 load_dotenv()
@@ -90,11 +91,22 @@ async def submit_form(data: TravelFormData):
         f"Create a detailed travel itinerary for a trip to {data.city} "
         f"from {data.startDate} to {data.endDate} with a budget of ${data.budget}. "
         f"Include must-visit places related to {data.nonNegotiables}, and keep a {data.pace} pace."
-        f"The theme or style of itinerary should be {data.travelStyle}. Avoid using markdown symbols like `**` or `#`"
+        f"The theme or style of itinerary should be {data.travelStyle}."
     )
     
     itinerary = chatgpt_message(prompt)
     print(itinerary)
-    
+    # Remove markdown symbols from the itinerary
+    def remove_markdown_symbols(text):
+        # Remove '#' symbols
+        text = re.sub(r'#', '', text)
+        # Remove '*' symbols
+        text = re.sub(r'\*', '', text)
+        # Remove '**' symbols
+        text = re.sub(r'\*\*', '', text)
+        return text
+
+    # Remove markdown symbols from the itinerary
+    itinerary = remove_markdown_symbols(itinerary)
     # Return the itinerary to the frontend
     return {"itinerary": itinerary}
