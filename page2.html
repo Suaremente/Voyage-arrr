@@ -162,6 +162,12 @@
         </div>
     </div>
 
+    <div id="itinerary-section" style="display: none;">
+        <h3>Your Travel Itinerary</h3>
+        <p id="itinerary-content"></p>
+    </div>
+
+
     <script>
         // Your existing mapbox initialization code remains the same
         mapboxgl.accessToken = 'pk.eyJ1Ijoid2lsbGlhbWJ1IiwiYSI6ImNtMXdpeHYxejBuZHUybG9yYnRzZmJxeDMifQ.CvpftxGSqM7tF0ZbU24v0A';
@@ -172,54 +178,56 @@
             zoom: 12
         });
 
-        // Modified form submission handler
-        document.getElementById('travelForm').addEventListener('submit', async function(event) {
-            event.preventDefault();
+    document.getElementById('travelForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
 
-            const formData = {
-                city: document.getElementById('cityInput').value,
-                startDate: document.getElementById('startDateInput').value,
-                endDate: document.getElementById('endDateInput').value,
-                budget: document.getElementById('budgetInput').value,
-                nonNegotiables: document.getElementById('nonNegotiablesInput').value,
-                travelStyle: document.getElementById('travelStyleInput').value,
-                pace: document.getElementById('PaceInput').value
-            };
+    const formData = {
+        city: document.getElementById('cityInput').value,
+        startDate: document.getElementById('startDateInput').value,
+        endDate: document.getElementById('endDateInput').value,
+        budget: document.getElementById('budgetInput').value,
+        nonNegotiables: document.getElementById('nonNegotiablesInput').value,
+        travelStyle: document.getElementById('travelStyleInput').value,
+        pace: document.getElementById('PaceInput').value
+    };
 
-            const startDate = new Date(formData.startDate);
-            const endDate = new Date(formData.endDate);
-            if (endDate < startDate) {
-                alert("End date must be after the start date.");
-                return;
-            }
+    const startDate = new Date(formData.startDate);
+    const endDate = new Date(formData.endDate);
+    if (endDate < startDate) {
+        alert("End date must be after the start date.");
+        return;
+    }
 
-            try {
-                const response = await fetch('http://127.0.0.1:8000/submit', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(formData)
-                });
-
-                if (response.ok) {
-                    const responseData = await response.json();
-                    console.log('Success:', responseData);
-
-                    // Show the map section and trigger a resize event
-                    document.getElementById('map-section').style.display = 'block';
-                    map.resize(); // Ensure the map renders correctly
-
-                    // Search for the selected city
-                    searchLocation(formData.city);
-                } else {
-                    console.error('Error:', response.statusText);
-                }
-            } catch (error) {
-                console.error('Error:', error);
-            }
+    try {
+        const response = await fetch('http://127.0.0.1:8000/submit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
         });
 
+        if (response.ok) {
+            const responseData = await response.json();
+            console.log('Success:', responseData);
+
+            // Display the itinerary content
+            document.getElementById('itinerary-section').style.display = 'block';
+            document.getElementById('itinerary-content').innerText = responseData.itinerary;
+
+            // Show the map section and trigger a resize event
+            document.getElementById('map-section').style.display = 'block';
+            map.resize(); // Ensure the map renders correctly
+
+            // Search for the selected city
+            searchLocation(formData.city);
+        } else {
+            console.error('Error:', response.statusText);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+    });
         let currentMarker = null;
 
       function searchLocation(location) {
