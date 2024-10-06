@@ -87,9 +87,10 @@ async def submit_form(data: TravelFormData):
 
     # Prepare the prompt for OpenAI
     prompt = (
-        f"Create a detailed travel itinerary for a family-oriented trip to {data.city} "
+        f"Create a detailed travel itinerary for a trip to {data.city} "
         f"from {data.startDate} to {data.endDate} with a budget of ${data.budget}. "
-        f"Include must-visit places related to {data.nonNegotiables}, and keep a relaxed pace."
+        f"Include must-visit places related to {data.nonNegotiables}, and keep a {data.pace} pace."
+        f"The theme or style of itinerary should be {data.travelStyle}."
     )
     
     itinerary = chatgpt_message(prompt)
