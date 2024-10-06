@@ -20,7 +20,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            
             margin: 0;
     }
     .container {
@@ -44,14 +44,17 @@
 </style>
 <body>
     <div class="container">
+        <div class="item item-1">
+            <img src="https://cdn-icons-png.flaticon.com/512/44/44386.png" alt="Travel Logo">
+        </div>
+        <div class="item item-2">
+        <header>
+            <h1>Voyage-arr</h1>
+            <h2>A web app to help users create their perfect travel itinerary</h2>    
+        </header>
+        
 
-    <img src="https://cdn-icons-png.flaticon.com/512/44/44386.png" alt="Travel Logo">
-    <header>
-        <h1>Voyage-arr</h1>
-        <h2>A web app to help users create their perfect travel itinerary</h2>    
-    </header>
-
-    <main>
+        <main>
 <!--        this just directs you to page2-->
 <!--        <form id="travelForm" action="page2.html" method="get">-->
 <!--            Input the city and state you will be visiting: <input type = "text" id="locationInput" required>-->
@@ -59,7 +62,7 @@
 <!--        <button style= "color:black; background-color:white; "  type="submit">submit</button>-->
 <!--        </form>-->
 
-        <button style="background-color:rgb(243, 214, 84)"onclick="window.location.href = 'page2.html'">Get Started</button>
+            <button style="background-color:rgb(243, 214, 84)"onclick="window.location.href = 'page2.html'">Get Started</button>
 
         <p id="demo"></p>
     </main>
