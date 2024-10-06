@@ -186,6 +186,12 @@
         </div>
     </div>
 
+    <div id="itinerary-section" style="display: none;">
+        <h3>Your Travel Itinerary</h3>
+        <p id="itinerary-content"></p>
+    </div>
+
+
     <script>
         // Your existing mapbox initialization code remains the same
         mapboxgl.accessToken = 'pk.eyJ1Ijoid2lsbGlhbWJ1IiwiYSI6ImNtMXdpeHYxejBuZHUybG9yYnRzZmJxeDMifQ.CvpftxGSqM7tF0ZbU24v0A';
@@ -196,19 +202,18 @@
             zoom: 12
         });
 
-        // Modified form submission handler
-        document.getElementById('travelForm').addEventListener('submit', async function(event) {
-            event.preventDefault();
+    document.getElementById('travelForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
 
-            const formData = {
-                city: document.getElementById('cityInput').value,
-                startDate: document.getElementById('startDateInput').value,
-                endDate: document.getElementById('endDateInput').value,
-                budget: document.getElementById('budgetInput').value,
-                nonNegotiables: document.getElementById('nonNegotiablesInput').value,
-                travelStyle: document.getElementById('travelStyleInput').value,
-                pace: document.getElementById('PaceInput').value
-            };
+    const formData = {
+        city: document.getElementById('cityInput').value,
+        startDate: document.getElementById('startDateInput').value,
+        endDate: document.getElementById('endDateInput').value,
+        budget: document.getElementById('budgetInput').value,
+        nonNegotiables: document.getElementById('nonNegotiablesInput').value,
+        travelStyle: document.getElementById('travelStyleInput').value,
+        pace: document.getElementById('PaceInput').value
+    };
 
             const startDate = new Date(formData.startDate);
             const endDate = new Date(formData.endDate);
@@ -231,13 +236,17 @@
                     body: JSON.stringify(formData)
                 });
 
-                if (response.ok) {
-                    const responseData = await response.json();
-                    console.log('Success:', responseData);
+        if (response.ok) {
+            const responseData = await response.json();
+            console.log('Success:', responseData);
 
-                    // Show the map section and trigger a resize event
-                    document.getElementById('map-section').style.display = 'block';
-                    map.resize(); // Ensure the map renders correctly
+            // Display the itinerary content
+            document.getElementById('itinerary-section').style.display = 'block';
+            document.getElementById('itinerary-content').innerText = responseData.itinerary;
+
+            // Show the map section and trigger a resize event
+            document.getElementById('map-section').style.display = 'block';
+            map.resize(); // Ensure the map renders correctly
 
                     // Search for the selected city
                     searchLocation(formData.city);
