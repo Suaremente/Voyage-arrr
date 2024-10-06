@@ -6,6 +6,7 @@ from openai import OpenAI
 import os
 from dotenv import load_dotenv
 
+
 load_dotenv()
 
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
@@ -26,16 +27,14 @@ def chatgpt_message(prompt):
 
 # example_gpt = chatgpt_message("miami")
 # print(example_gpt)
-# example_gpt = chatgpt_message("miami")
-# print(example_gpt)
 
 
 app = FastAPI()
 
 # Define the allowed origins
 origins = ["*"]
-     "http://localhost:63342",
-     "https://voyage-arrr.vercel.app",  # Update this to your frontend URL
+    "http://localhost:63342",
+    "https://voyage-arrr.vercel.app",  # Update this to your frontend URL
 
 
 # Add the CORS middleware
@@ -56,16 +55,6 @@ class TextData(BaseModel):
 #     data = {'name': example_gpt,
 #             'year': 2024}
 #     return data
-#
-# @app.get("/info")
-# async def get_info():
-#     data = {'event': 'KNIGHT HACKS'}
-#     return data
-# @app.get("/")
-# async def get_data():
-#     data = {'name': example_gpt,
-#             'year': 2024}
-#     return data
 
 # @app.get("/info")
 # async def get_info():
@@ -81,38 +70,48 @@ class TextData(BaseModel):
 #     return final_data
 
 
-# Define the structure of the expected data, including the start and end dates
-class TravelFormData(BaseModel):
-    city: str
-    startDate: str
-    endDate: str
-    budget: str
-    nonNegotiables: str
-    travelStyle: str
-    pace: str
 
-# Create a POST endpoint to handle form submissions
-@app.post("/submit")
-async def submit_form(data: TravelFormData):
-    # Process the data here, including the date range
-    print(f"Received data: {data}")
 
-    # You can validate the date range here, for example, ensuring startDate < endDate
-    if data.startDate > data.endDate:
-        return {"error": "Start date cannot be later than the end date."}
 
-    # Respond to the frontend
-    return {"message": "Form submitted successfully!", "received_data": data}
-# @app.post("/submit_city")
-# async def submit_city(data: TextData):
-#     print(f"received data/city: {data.text}")
-#     final_data = chatgpt_message(f"Quick paragraph overview of vacation things to do at {data.text}")
-#     print(final_data)
-#     return final_data
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class Questionnaire(BaseModel):
+    destination: str = Field(..., min_length=1, description="The destination must not be empty")
+    start_date: date = Field(..., description="Start date must be a valid date in YYYY/MM/DD format")
+    end_date: date = Field(..., description="End date must be a valid date in YYYY/MM/DD format")
+    budget: float = Field(..., gt=0, description="Budget must be a valid dollar amount greater than 0")
+    must_do: str = None
+
+    @validator('start_date', 'end_date')
+    def validate_date_format(cls, value):
+        try:
+            datetime.strptime(value, "%Y/%m/%d")
+        except ValueError:
+            raise ValueError("Date must be in YYYY/MM/DD format")
+        return value
 
 
 @app.get("/itinerary")
-async def gen_itinerary(questionnaire: TravelFormData):
+async def gen_itinerary(questionnaire: Questionnaire):
     start_date = datetime.strptime(questionnaire.start_date, "%Y/%m/%d").date()
     end_date = datetime.strptime(questionnaire.end_date, "%Y/%m/%d").date()
 
