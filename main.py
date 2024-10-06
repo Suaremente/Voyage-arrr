@@ -89,6 +89,7 @@ async def submit_form(data: TravelFormData):
     if data.startDate > data.endDate:
         return {"error": "Start date cannot be later than the end date."}
 
+<<<<<<< HEAD
     # Prepare the prompt for OpenAI
     prompt = (
         f"Create a detailed travel itinerary for a family-oriented trip to {data.city} "
@@ -101,3 +102,48 @@ async def submit_form(data: TravelFormData):
     
     # Return the itinerary to the frontend
     return {"itinerary": itinerary}
+=======
+    # Respond to the frontend
+    return {"message": "Form submitted successfully!", "received_data": data}
+
+
+class Questionnaire(BaseModel):
+    destination: str = Field(..., min_length=1, description="The destination must not be empty")
+    start_date: date = Field(..., description="Start date must be a valid date in YYYY/MM/DD format")
+    end_date: date = Field(..., description="End date must be a valid date in YYYY/MM/DD format")
+    budget: float = Field(..., gt=0, description="Budget must be a valid dollar amount greater than 0")
+    must_do: str = None
+
+    @validator('start_date', 'end_date')
+    def validate_date_format(cls, value):
+        try:
+            datetime.strptime(value, "%Y/%m/%d")
+        except ValueError:
+            raise ValueError("Date must be in YYYY/MM/DD format")
+        return value
+
+
+@app.get("/itinerary")
+async def gen_itinerary(questionnaire: Questionnaire):
+    start_date = datetime.strptime(questionnaire.start_date, "%Y/%m/%d").date()
+    end_date = datetime.strptime(questionnaire.end_date, "%Y/%m/%d").date()
+
+    if end_date < start_date:
+        print("end date must be after start date")
+
+    prompt = f"I need a detailed travel itinerary for {questionnaire.destination}."
+    prompt += f" The trip starts on {start_date} and ends on {end_date}."
+    prompt += f" The budget for the trip is {questionnaire.budget}."
+    
+    if questionnaire.must_do:
+        prompt += f" The traveler says their itinerary must include {questionnaire.must_do}."
+
+    prompt += f" Please return a list of activities as JSON objects with each element containing the name of the activity, the price of the activity, as well as any applicable links for learning more about the event and/or registering for the event"
+
+    itinerary = f"Sample itinerary for {questionnaire.destination} from {start_date} to {end_date}"
+    
+    return {
+        "status": "success",
+        "itinerary": itinerary
+    }
+>>>>>>> 3ccfc58d0e24bfba2e881af548ddbfa256df8ab3
