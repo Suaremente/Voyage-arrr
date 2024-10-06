@@ -24,8 +24,8 @@ def chatgpt_message(prompt):
     return chat_completion.choices[0].message.content.strip()
 
 
-example_gpt = chatgpt_message("miami")
-print(example_gpt)
+# example_gpt = chatgpt_message("miami")
+# print(example_gpt)
 
 
 app = FastAPI()
@@ -49,21 +49,45 @@ class TextData(BaseModel):
     text: str
 
 
-@app.get("/")
-async def get_data():
-    data = {'name': example_gpt,
-            'year': 2024}
-    return data
+# @app.get("/")
+# async def get_data():
+#     data = {'name': example_gpt,
+#             'year': 2024}
+#     return data
+#
+# @app.get("/info")
+# async def get_info():
+#     data = {'event': 'KNIGHT HACKS'}
+#     return data
 
-@app.get("/info")
-async def get_info():
-    data = {'event': 'KNIGHT HACKS'}
-    return data
+
+# @app.post("/submit_city")
+# async def submit_city(data: TextData):
+#     print(f"received data/city: {data.text}")
+#     final_data = chatgpt_message(f"Quick paragraph overview of vacation things to do at {data.text}")
+#     print(final_data)
+#     return final_data
 
 
-@app.post("/submit_city")
-async def submit_city(data: TextData):
-    print(f"received data/city: {data.text}")
-    final_data = chatgpt_message(f"Quick paragraph overview of vacation things to do at {data.text}")
-    print(final_data)
-    return final_data
+# Define the structure of the expected data, including the start and end dates
+class TravelFormData(BaseModel):
+    city: str
+    startDate: str
+    endDate: str
+    budget: str
+    nonNegotiables: str
+    travelStyle: str
+    pace: str
+
+# Create a POST endpoint to handle form submissions
+@app.post("/submit")
+async def submit_form(data: TravelFormData):
+    # Process the data here, including the date range
+    print(f"Received data: {data}")
+
+    # You can validate the date range here, for example, ensuring startDate < endDate
+    if data.startDate > data.endDate:
+        return {"error": "Start date cannot be later than the end date."}
+
+    # Respond to the frontend
+    return {"message": "Form submitted successfully!", "received_data": data}
