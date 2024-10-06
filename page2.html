@@ -39,34 +39,85 @@
 
     </style>
     <header>
-        
+        <h3>Answer a couple more questions so we can help with your ideal vacation</h3>
     </header>
     <body>   
-        
-        <form action="page3.html" method="GET"> <!-- Added action attribute -->
-            <h3>Answer a couple more questions so that we can help you with your ideal vacation!</h3>
-        <form>
+        <form id="travelForm"> <!-- Added id="travelForm" -->
         <fieldset>
-            <label id="city">Enter the city you will be visiting: <br>
-            <input type="text" id="city"/></label>
+            <label id="city">Enter the city you will be visiting: <br><input type="text" id="cityInput" name="city"/></label>
             <br><br>
-            <label id="days">Enter number of days: <br><input id="days" type="number" /></label>
+            <label id="days">Select start date: <br><input id="startDateInput" type="date" name="startDate" /></label>
             <br><br>
-            <label id="budget">Enter your budget: <br><input id="budget" type="text" /></label>
+            <label id="endDate">Select end date: <br><input id="endDateInput" type="date" name="endDate" /></label>
             <br><br>
-            <label id="nonNegotiables">Are there any non-negotiables: <br><input id="nonNegotiables" type="text"/></label>
+            <label id="budget">Enter your budget: <br><input id="budgetInput" type="text" name="budget" /></label>
             <br><br>
-            <label id="travelStyle">How would you describe your travel style: <br><input id="travelStyle" type="text"/></label>
+            <label id="nonNegotiables">Are there any non-negotiables(must do activites/conditions): <br><input id="nonNegotiablesInput" type="text" name="nonNegotiables"/></label>
             <br><br>
-            <label id="Pace">Do you prefer a packed schedule or more relaxed pace: <br><input id="Pace" type="text"/></label>
+            <label id="travelStyle">How would you describe your travel style:<br>
+                <select id="travelStyleInput" name="travelStyle">
+                    <option value="select">Select an option</option>
+                    <option value="adventurous">Nature/Scenary</option>
+                    <option value="relaxed">Historical Landmarks</option>
+                    <option value="cultural">Cultural</option>
+                    <option value="partyNightlife">Party/Night Life</option>
+                    <option value="familyOriented">Family Oriented</option>
+                </select>
+            </label>
             <br><br>
-
+            <label id="Pace">Do you prefer a fast/busy or relaxed/free paced itinerary:<br>
+                <select id="PaceInput" name="pace">
+                    <option value="select">Select an option</option>
+                    <option value="fastBusy">Fast/Busy</option>
+                    <option value="relaxedFree">Relaxed/Free</option>
+                </select>
+            </label>
+            <br><br>
         </fieldset>
         <br><br>
 
-        <button style="color:black;  display: block; margin: 0 auto;" type="submit">Submit</button>
-
+            <button style="color:black; background-color:rgb(243, 214, 84); display: block; margin: 0 auto;" type="submit">Submit</button>
         </form>
+
+        <script>
+    // Handle form submission
+            document.getElementById('travelForm').addEventListener('submit', async function(event) {
+                event.preventDefault();  // Prevent the form from reloading the page
+
+                // Gather the form data including the date range
+                const formData = {
+                    city: document.getElementById('cityInput').value,
+                    startDate: document.getElementById('startDateInput').value,
+                    endDate: document.getElementById('endDateInput').value,
+                    budget: document.getElementById('budgetInput').value,
+                    nonNegotiables: document.getElementById('nonNegotiablesInput').value,
+                    travelStyle: document.getElementById('travelStyleInput').value,
+                    pace: document.getElementById('PaceInput').value
+                };
+
+                // Send the data as a JSON object to the API endpoint
+                try {
+                    const response = await fetch('http://127.0.0.1:8000/submit', {
+                        method: 'POST',  // or 'PUT', depending on your API design
+                        headers: {
+                            'Content-Type': 'application/json'  // Set the content type to JSON
+                        },
+                        body: JSON.stringify(formData)  // Convert formData to JSON
+                    });
+
+                    if (response.ok) {
+                        const responseData = await response.json(); // If your API returns JSON
+                        console.log('Success:', responseData);
+                        window.location.href = "page3.html";
+                    } else {
+                        console.error('Error:', response.statusText);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            });
+        </script>
+
 
     </body>
 </html>
