@@ -13,18 +13,30 @@ h1{
     font-size: 80px;
     font-style:oblique;
     font-family: "Playfair",serif;
-    border-bottom: solid
+    border-bottom: solid;
     
 }
 
 /*
+label{
+    font-family: "Roboto",sans-serif;
+}*/
+
 input{
     border-width: 0.5px;
     border-radius: 10px;
-    font-size: large;
-    height: 25px;
+    height: 20px;
+    /*font-family: "Roboto",sans-serif;*/
 }
-*/
+
+select{
+    
+    border-width: 0.5px;
+    border-radius: 10px;
+    height: 25px;
+    /*font-family: "Roboto",sans-serif;*/
+}
+
 /*just commented so that all the titles are in the same font*/
 /*form{
     font-size: 20px;
