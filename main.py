@@ -85,10 +85,6 @@ async def submit_form(data: TravelFormData):
     # Process the data here, including the date range
     print(f"Received data: {data}")
 
-    # You can validate the date range here, for example, ensuring startDate < endDate
-    if data.startDate > data.endDate:
-        return {"error": "Start date cannot be later than the end date."}
-
     # Prepare the prompt for OpenAI
     prompt = (
         f"Create a detailed travel itinerary for a family-oriented trip to {data.city} "
