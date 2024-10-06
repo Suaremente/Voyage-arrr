@@ -89,5 +89,15 @@ async def submit_form(data: TravelFormData):
     if data.startDate > data.endDate:
         return {"error": "Start date cannot be later than the end date."}
 
-    # Respond to the frontend
-    return {"message": "Form submitted successfully!", "received_data": data}
+    # Prepare the prompt for OpenAI
+    prompt = (
+        f"Create a detailed travel itinerary for a family-oriented trip to {data.city} "
+        f"from {data.startDate} to {data.endDate} with a budget of ${data.budget}. "
+        f"Include must-visit places related to {data.nonNegotiables}, and keep a relaxed pace."
+    )
+    
+    itinerary = chatgpt_message(prompt)
+    print(itinerary)
+    
+    # Return the itinerary to the frontend
+    return {"itinerary": itinerary}
